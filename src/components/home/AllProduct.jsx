@@ -24,7 +24,7 @@ const AllProduct = () => {
 
     return (
         <div>
-            <h3 className="text-center font-semibold text-3xl mb-7">FIND THE PERFECT PHONE FOR YOU</h3>
+            <h3 className="text-center font-semibold text-3xl mb-7">FIND THE PERFECT PRODUCT FOR YOU</h3>
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-3 gap-y-5'>
 
                 {

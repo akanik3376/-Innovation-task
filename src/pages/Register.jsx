@@ -1,21 +1,70 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
+import useAuth from "../Hooks/useAuth";
+import { FcGoogle } from "react-icons/fc";
+// import useAxiosPublic from "../Hooks/axiosPublic";
 
 const Register = ({ userData }) => {
     const { register, handleSubmit, setValue, formState: { errors } } = useForm();
+    const [successMsg, setSuccessMsg] = useState('')
+
+    const { createUser, googleLogin, updateProfileUser } = useAuth()
+    // const axiosPublic = useAxiosPublic()
 
     const onSubmit = (data) => {
-        // Handle form submission here
-        console.log(data);
+        const username = (`${data.firstName + data.lastName} `)
+        const email = data.email
+        const firstName = data.firstName
+        const lastName = data.lastName
+        const gender = data.gender
+        const image = data.image || '...'
+        const password = data.password
+
+
+        // create user
+        createUser(email, password)
+            .then(res => {
+                const loggerUser = res.user
+                // console.log(loggerUser)
+
+                updateProfileUser(name, image)
+                    .then(() => {
+                        const userInfo = {
+                            username, email,
+                            firstName, lastName,
+                            gender, image,
+                            password
+                        };
+
+                        axiosPublic.post('/auth/login', userInfo)
+                            .then(res => {
+                                console.log(res);
+                                setSuccessMsg('User created update successfully');
+                                // navigate('/');
+                            })
+                            .catch(error => {
+                                console.error('Error creating user:', error);
+                            });
+                    })
+                setValue("firstName", "");
+                setValue("lastName", "");
+                setValue("email", "");
+                setValue("image", "");
+                setValue("gender", "");
+                setValue("password", "");
+                setSuccessMsg('User created successfully');
+            })
+            .catch(err => console.log(err))
     };
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center border ">
             <div className="bg-white p-8 rounded  w-full md:w-2/4 shadow-md">
+
                 <form onSubmit={handleSubmit(onSubmit)} >
                     <h2 className="text-2xl text-center text-black font-semibold mb-4">Register</h2>
-
+                    <p className="my-3">{successMsg}</p>
                     <div className="grid grid-cols-2 gap-4 mb-4">
                         <div>
                             <label htmlFor="firstName" className="block text-black text-sm font-semibold mb-2">First Name</label>
@@ -60,9 +109,20 @@ const Register = ({ userData }) => {
                         <button type="submit" className="btn  btn-outline text-black  hover:text-white border-0 border-b-4 hover:border-blue-600 border-blue-600 w-full hover:bg-blue-600">Submit</button>
                     </div>
                 </form>
+                <div className='flex items-center pt-4 space-x-1'>
+                    <div className='flex-1 h-px sm:w-16 dark:bg-gray-700'></div>
+                    <p className='px-3 text-sm dark:text-gray-400'>
+                        Signup with social accounts
+                    </p>
+                    <div className='flex-1 h-px sm:w-16 dark:bg-gray-700'></div>
+                </div>
+                <div className='flex justify-center items-center space-x-2 border m-3 p-2 border-gray-300 border-rounded cursor-pointer'>
+                    <FcGoogle size={32} />
 
+                    <p>Continue with Google</p>
+                </div>
                 <div className="mt-5">
-                    <p>Already have a account? <Link to='/login'><span className='text-purple-600'>Sing in</span></Link></p>
+                    <p>Already have a account? <Link to='/login'><span className='text-purple-600 underline'>Sing in</span></Link></p>
                 </div>
 
             </div>
