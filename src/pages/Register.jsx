@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../Hooks/useAuth";
 import { FcGoogle } from "react-icons/fc";
 // import useAxiosPublic from "../Hooks/axiosPublic";
@@ -8,6 +8,11 @@ import { FcGoogle } from "react-icons/fc";
 const Register = ({ userData }) => {
     const { register, handleSubmit, setValue, formState: { errors } } = useForm();
     const [successMsg, setSuccessMsg] = useState('')
+    const [isShow, setIsShow] = useState(false)
+
+    // navigate user after register
+    const location = useLocation()
+    const navigate = useNavigate()
 
     const { createUser, googleLogin, updateProfileUser } = useAuth()
     // const axiosPublic = useAxiosPublic()
@@ -26,38 +31,51 @@ const Register = ({ userData }) => {
         createUser(email, password)
             .then(res => {
                 const loggerUser = res.user
-                // console.log(loggerUser)
+                console.log(res)
 
-                updateProfileUser(name, image)
-                    .then(() => {
-                        const userInfo = {
-                            username, email,
-                            firstName, lastName,
-                            gender, image,
-                            password
-                        };
+                // updateProfileUser(name, image)
+                //     .then(() => {
+                //         const userInfo = {
+                //             username, email,
+                //             firstName, lastName,
+                //             gender, image,
+                //             password
+                //         };
 
-                        axiosPublic.post('/auth/login', userInfo)
-                            .then(res => {
-                                console.log(res);
-                                setSuccessMsg('User created update successfully');
-                                // navigate('/');
-                            })
-                            .catch(error => {
-                                console.error('Error creating user:', error);
-                            });
-                    })
+                //         axiosPublic.post('/auth/login', userInfo)
+                //             .then(res => {
+                //                 console.log(res);
+                //                 setSuccessMsg('User created update successfully');
+                //                 navigate(location?.state ? location.state : '/')
+                //             })
+                //             .catch(error => {
+                //                 console.error('Error creating user:', error);
+                //             });
+                //     })
                 setValue("firstName", "");
                 setValue("lastName", "");
                 setValue("email", "");
                 setValue("image", "");
                 setValue("gender", "");
                 setValue("password", "");
+
                 setSuccessMsg('User created successfully');
+                navigate(location?.state ? location.state : '/')
             })
             .catch(err => console.log(err))
     };
 
+    // google register
+    const HandelGoogleLogin = () => {
+        googleLogin()
+            .then(res => {
+                if (res) {
+                    setSuccessMsg("User login success fully");
+                    navigate(location?.state ? location.state : '/')
+                }
+            })
+            .catch(err => console.log(err))
+    }
     return (
         <div className="min-h-screen flex flex-col items-center justify-center border ">
             <div className="bg-white p-8 rounded  w-full md:w-2/4 shadow-md">
@@ -99,10 +117,27 @@ const Register = ({ userData }) => {
                         {errors.gender && <p className="text-red-500 text-xs mt-1">{errors.gender.message}</p>}
                     </div>
 
-                    <div className="mb-4">
-                        <label htmlFor="password" className="block text-black text-sm font-semibold mb-2">Password</label>
-                        <input type="password" id="password" {...register("password", { required: "Password is required" })} placeholder="Enter your password" className={`w-full p-3 border ${errors.password ? 'border-red-500' : 'border-gray-300'} rounded`} />
-                        {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
+                    <div>
+                        <div className='flex justify-between'>
+                            <label htmlFor='password' className='text-sm mb-2'>
+                                Password
+                            </label>
+                        </div>
+                        <input
+                            type={isShow ? 'text' : 'password'}
+                            name='password'
+                            autoComplete='current-password'
+                            id='password'
+                            required
+                            placeholder='*******'
+                            className='w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-rose-500 bg-gray-200 text-gray-900 relative'
+
+                        />
+
+                    </div>
+                    <div className='mt-3 flex items-center gap-x-2'>
+                        <input onClick={() => setIsShow(!isShow)} className='text-2xl' type="checkbox" name="" id="" />
+                        <p> Show password</p>
                     </div>
 
                     <div className="mt-6">
@@ -116,7 +151,8 @@ const Register = ({ userData }) => {
                     </p>
                     <div className='flex-1 h-px sm:w-16 dark:bg-gray-700'></div>
                 </div>
-                <div className='flex justify-center items-center space-x-2 border m-3 p-2 border-gray-300 border-rounded cursor-pointer'>
+                <div onClick={HandelGoogleLogin}
+                    className='flex justify-center items-center space-x-2 border m-3 p-2 border-gray-300 border-rounded cursor-pointer'>
                     <FcGoogle size={32} />
 
                     <p>Continue with Google</p>

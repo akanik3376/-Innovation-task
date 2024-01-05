@@ -1,13 +1,20 @@
 import React, { useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import useAuth from '../Hooks/useAuth'
 import { FcGoogle } from "react-icons/fc";
+import { FaEyeSlash } from 'react-icons/fa';
 
 const Login = () => {
     const { handleSubmit, control, register, formState: { errors } } = useForm();
+    const [isShow, setIsShow] = useState(false)
     const [successMsg, setSuccessMsg] = useState('')
     const { LoginUser, googleLogin } = useAuth()
+
+    // navigate user after login
+    const location = useLocation()
+    const navigate = useNavigate()
+
     const onSubmit = (data) => {
         // console.log(data.password);
         const email = data.email
@@ -17,7 +24,7 @@ const Login = () => {
             .then(res => {
                 if (res) {
                     setSuccessMsg("User login success fully");
-                    // navigate(location?.state ? location.state : '/')
+                    navigate(location?.state ? location.state : '/')
                 }
             })
             .catch(err => console.log(err))
@@ -52,14 +59,29 @@ const Login = () => {
                     {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
                 </div>
 
-                <div className="mb-4">
-                    <label htmlFor="password" className="block text-black text-sm font-semibold mb-2">Password</label>
-                    <input type="password" id="password" {...register("password", { required: "Password is required" })} placeholder="Enter your password" className={`w-full p-3 border ${errors.password ? 'border-red-500' : 'border-gray-300'} rounded`} />
-                    {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
+                <div>
+                    <div className='flex justify-between'>
+                        <label htmlFor='password' className='text-sm mb-2'>
+                            Password
+                        </label>
+                    </div>
+                    <input
+                        type={isShow ? 'text' : 'password'}
+                        name='password'
+                        autoComplete='current-password'
+                        id='password'
+                        required
+                        placeholder='*******'
+                        className='w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-rose-500 bg-gray-200 text-gray-900 relative'
+
+                    />
+
                 </div>
-
-
-                <div className="mt-6">
+                <div className='mt-3 flex items-center gap-x-2'>
+                    <input onClick={() => setIsShow(!isShow)} className='text-2xl' type="checkbox" name="" id="" />
+                    <p> Show password</p>
+                </div>
+                <div className="mt-4">
                     <button type="submit" className="btn  btn-outline text-black  hover:text-white border-0 border-b-4 hover:border-blue-600 border-blue-600 w-full hover:bg-blue-600">Sing In</button>
                 </div>
             </form>
@@ -67,7 +89,7 @@ const Login = () => {
             <div className='flex items-center pt-4 space-x-1'>
                 <div className='flex-1 h-px sm:w-16 dark:bg-gray-700'></div>
                 <p className='px-3 text-sm dark:text-gray-400'>
-                    Signup with social accounts
+                    Sign up with social accounts
                 </p>
                 <div className='flex-1 h-px sm:w-16 dark:bg-gray-700'></div>
             </div>

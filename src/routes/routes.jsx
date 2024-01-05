@@ -4,6 +4,7 @@ import ErrorPage from '../pages/ErrorPage';
 import Home from '../pages/Home';
 import Login from '../pages/Login';
 import Register from '../pages/Register';
+import PrivetRoot from './PrivetRoot';
 
 
 const routes = createBrowserRouter([
@@ -14,13 +15,8 @@ const routes = createBrowserRouter([
         children: [
             {
                 path: '/',
-                element: <Home />
+                element: <PrivetRoot><Home /></PrivetRoot>
             },
-            {
-                path: '/about',
-                element: <h3>This is about page</h3>
-            },
-
         ]
     },
     {

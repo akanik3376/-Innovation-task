@@ -41,12 +41,12 @@ const Card = ({ product }) => {
                         </p>
                     </div>
 
-                    <div className="card-actions justify-between mt-4">
+                    <div className="card-actions justify-between mt-4 flex items-center">
                         <p className="flex items-center text-red-600">
                             <BsCurrencyDollar />
                             {price}
                         </p>
-                        <button className="btn  btn-outline text-black  hover:text-white border-0 border-b-4 hover:border-green-500 border-green-500 hover:bg-green-500">
+                        <button className="btn  btn-outline text-black  hover:text-white border-0 border-b-4 hover:border-green-500 border-green-500 hover:bg-green-500 font-semibold">
                             Add To Cart
                         </button>
                     </div>

@@ -36,12 +36,12 @@ const AuthProvider = ({ children }) => {
     }
 
 
-
     // Logout user 
     const logoutUser = () => {
         setIsLoading(true)
         return signOut(auth)
     }
+
     // update user
     const updateProfileUser = (name, photo) => {
         return updateProfile(auth.currentUser, {
@@ -57,15 +57,13 @@ const AuthProvider = ({ children }) => {
         const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser)
             if (currentUser) {
-
+                setIsLoading(false)
                 if (currentUser) {
                     const userInfo = { email: currentUser.email }
-
-
                 }
                 else {
-                    localStorage.removeItem('access-token')
-                    setIsLoading(false)
+                    // localStorage.removeItem('access-token')
+                    // setIsLoading(false)
                 }
 
 

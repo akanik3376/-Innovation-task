@@ -1,24 +1,48 @@
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { FaTimes } from 'react-icons/fa'
 import { CiMenuFries } from 'react-icons/ci'
+import useAuth from "../Hooks/useAuth";
 
 const Navbar = () => {
     const [click, setClick] = useState(false);
+    const { user, logoutUser } = useAuth()
+    // navigate user after login out
+    const location = useLocation()
+    const navigate = useNavigate()
 
     const handleClick = () => {
         setClick(!click);
     };
 
+    // logout user
+    const HandelLogout = async () => {
+        const click = await logoutUser()
+        if (click) {
+            navigate('/login')
+        }
+
+    }
     const menuItems = (
         <div className="lg:hidden md:hidden block absolute top-6 w-24 ">
-            <ul className="text-center text-xl flex flex-col bg-slate-900">
+            <ul className="text-center text-xl flex flex-col bg-slate-900 ">
+                <div className="w-10 mx-auto mt-2 btn btn-ghost btn-circle">
+                    {
+                        user?.photoURL ? <img src={user.photoURL} alt="" className="w-10  rounded-full" /> :
+                            <img className="w-10  rounded-full" alt="Tailwind CSS Navbar component" src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+                    }
+                </div>
                 <NavLink to='/'>
-                    <li className="py-2 px-2 underline text-white hover:rounded">Home</li>
+                    <li className="py-2 px-2 underline text-white ">Home</li>
                 </NavLink>
-                <NavLink to='/login'>
-                    <li className="py-2 px-2 underline text-white hover:rounded">Sing Up</li>
-                </NavLink>
+
+                {
+                    user ? <li onClick={HandelLogout}
+                        className="py-2 px-2 underline text-white ">Sing Out</li> : <NavLink to='/login'>
+                        <li className="py-2 px-2 underline text-white ">Sing Up</li>
+                    </NavLink>
+                }
+
             </ul>
         </div>
     );
@@ -34,28 +58,39 @@ const Navbar = () => {
                 {/* for large/medium */}
                 <div className="lg:flex md:flex lg:flex-1 items-center justify-end font-normal hidden">
                     <div className="flex-10">
-                        <ul className="flex gap-8 mr-16 text-[18px]">
+                        <ul className="flex gap-6 mr-12 text-[18px] items-center">
                             <NavLink to='/'>
                                 <li className="text-slate-900 hover:text-emerald-600 transition hover:border-b-2 border-slate-900 hover:border-emerald-600 cursor-pointer">Home</li>
                             </NavLink>
 
-                            <NavLink to='/login'>
-                                <li className="text-slate-900 hover:text-emerald-600 transition hover:border-b-2 border-slate-900 hover:border-emerald-600 cursor-pointer">Sing Up</li>
-                            </NavLink>
+                            {
+                                user ? <li onClick={HandelLogout}
+                                    className="text-slate-900 hover:text-emerald-600 transition hover:border-b-2 border-slate-900 hover:border-emerald-600 cursor-pointer">Sing Out</li> :
+                                    <NavLink to='/login'>
+                                        <li className="text-slate-900 hover:text-emerald-600 transition hover:border-b-2 border-slate-900 hover:border-emerald-600 cursor-pointer">Sing Up</li>
+                                    </NavLink>
+                            }
 
-                            <NavLink to='/register'>
-                                <li className="text-slate-900 hover:text-emerald-600 transition hover:border-b-2 border-slate-900 hover:border-emerald-600 cursor-pointer">Registration</li>
-                            </NavLink>
+
                         </ul>
+
+                    </div>
+                    <div className="mr-12 btn btn-ghost btn-circle">
+                        {
+                            user && user?.photoURL ? <img src={user.photoURL} alt="" className="w-10 rounded-full" /> :
+                                <img className="w-10 rounded-full" alt="Tailwind CSS Navbar component" src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+                        }
                     </div>
                 </div>
 
                 {/* for small devices */}
                 <div className="dropdown dropdown-bottom dropdown-right  md:hidden  ">
+
                     <button onClick={handleClick} className="block rounded-md transition text-slate-900 font-semibold " >
                         {click ? <FaTimes /> : <CiMenuFries />}
                     </button>
                     <div className="top-6">
+
                         {click && menuItems}
                     </div>
                 </div>
