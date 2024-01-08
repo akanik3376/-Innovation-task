@@ -4,7 +4,8 @@ import { BsCurrencyDollar } from 'react-icons/bs';
 
 const Card = ({ product }) => {
     const { images, title, stock, rating, price, brand, description, discountPercentage } = product || '';
-
+    console.log(price)
+    console.log(typeof (price))
     const handleClick = (star) => {
         // Handle the click event if needed
         console.log(`Clicked on star: ${star}`);
