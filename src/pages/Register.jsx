@@ -25,6 +25,7 @@ const Register = ({ userData }) => {
         const gender = data.gender
         const image = data.image || '...'
         const password = data.password
+        console.log(password)
 
 
         // create user
@@ -86,30 +87,30 @@ const Register = ({ userData }) => {
                     <div className="grid grid-cols-2 gap-4 mb-4">
                         <div>
                             <label htmlFor="firstName" className="block text-black text-sm font-semibold mb-2">First Name</label>
-                            <input type="text" id="firstName" {...register("firstName", { required: "First Name is required" })} placeholder="Enter your first name" className={`w-full p-3 border ${errors.firstName ? 'border-red-500' : 'border-gray-300'} rounded`} />
+                            <input type="text" id="firstName" {...register("firstName", { required: "First Name is required" })} placeholder="Enter your first name" className={`p-3 border rounded w-full focus:outline-none focus:border-blue-500 ${errors.firstName ? 'border-red-500' : 'border-gray-300'} rounded`} />
                             {errors.firstName && <p className="text-red-500 text-xs mt-1">{errors.firstName.message}</p>}
                         </div>
                         <div>
                             <label htmlFor="lastName" className="block text-black text-sm font-semibold mb-2">Last Name</label>
-                            <input type="text" id="lastName" {...register("lastName", { required: "Last Name is required" })} placeholder="Enter your last name" className={`w-full p-3 border ${errors.lastName ? 'border-red-500' : 'border-gray-300'} rounded`} />
+                            <input type="text" id="lastName" {...register("lastName", { required: "Last Name is required" })} placeholder="Enter your last name" className={`p-3 border rounded w-full focus:outline-none focus:border-blue-500 ${errors.lastName ? 'border-red-500' : 'border-gray-300'} rounded`} />
                             {errors.lastName && <p className="text-red-500 text-xs mt-1">{errors.lastName.message}</p>}
                         </div>
                     </div>
 
                     <div className="mb-4">
                         <label htmlFor="email" className="block text-black text-sm font-semibold mb-2">Email</label>
-                        <input type="email" id="email" {...register("email", { required: "Email is required" })} placeholder="Enter your email" className={`w-full p-3 border ${errors.email ? 'border-red-500' : 'border-gray-300'} rounded`} />
+                        <input type="email" id="email" {...register("email", { required: "Email is required" })} placeholder="Enter your email" className={`p-3 border rounded w-full focus:outline-none focus:border-blue-500 ${errors.email ? 'border-red-500' : 'border-gray-300'}`} />
                         {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
                     </div>
 
                     <div className="mb-4">
                         <label htmlFor="image" className="block text-black text-sm font-semibold mb-2">Image</label>
-                        <input type="file" id="image" {...register("image")} className="w-full p-3 border border-gray-300 rounded" />
+                        <input type="photo" id="image" {...register("image")} placeholder="image url" className="p-3 border rounded w-full focus:outline-none focus:border-blue-500 border-gray-300 " />
                     </div>
 
                     <div className="mb-4">
                         <label htmlFor="gender" className="block text-black text-sm font-semibold mb-2">Gender</label>
-                        <select id="gender" {...register("gender", { required: "Gender is required" })} className={`w-full p-3 border ${errors.gender ? 'border-red-500' : 'border-gray-300'} rounded`}>
+                        <select id="gender" {...register("gender", { required: "Gender is required" })} className={`p-3 border rounded w-full focus:outline-none focus:border-blue-500 ${errors.gender ? 'border-red-500' : 'border-gray-300'} rounded`}>
                             <option value="">Select Gender</option>
                             <option value="male">Male</option>
                             <option value="female">Female</option>
@@ -130,7 +131,7 @@ const Register = ({ userData }) => {
                             id='password'
                             required
                             placeholder='*******'
-                            className='w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-rose-500 bg-gray-200 text-gray-900 relative'
+                            className={`p-3 border rounded w-full focus:outline-none focus:border-blue-500 ${errors.password ? 'border-red-500' : 'border-gray-300'}`}
 
                         />
 
@@ -147,7 +148,7 @@ const Register = ({ userData }) => {
                 <div className='flex items-center pt-4 space-x-1'>
                     <div className='flex-1 h-px sm:w-16 dark:bg-gray-700'></div>
                     <p className='px-3 text-sm dark:text-gray-400'>
-                        Signup with social accounts
+                        Sign up with social accounts
                     </p>
                     <div className='flex-1 h-px sm:w-16 dark:bg-gray-700'></div>
                 </div>

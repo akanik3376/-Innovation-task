@@ -5,10 +5,7 @@ const PrivateRoute = ({ children }) => {
     const { isLoading, user } = useAuth();
     const location = useLocation();
 
-    if (!user) {
-        return <Navigate to="/login"></Navigate>
 
-    }
 
     if (isLoading) {
         return (
@@ -20,7 +17,10 @@ const PrivateRoute = ({ children }) => {
             </div>
         );
     }
+    if (!user) {
+        return <Navigate to="/login"></Navigate>
 
+    }
 
     if (user) {
         return children;

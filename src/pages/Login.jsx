@@ -72,7 +72,7 @@ const Login = () => {
                         id='password'
                         required
                         placeholder='*******'
-                        className='w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-rose-500 bg-gray-200 text-gray-900 relative'
+                        className={`p-3 border rounded w-full focus:outline-none focus:border-blue-500 ${errors.password ? 'border-red-500' : 'border-gray-300'}`}
 
                     />
 
