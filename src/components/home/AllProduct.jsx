@@ -5,6 +5,7 @@ const AllProduct = () => {
     const [selectedPrice, setSelectedPrice] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
     const [data, setData] = useState([]);
+    const [cart, setCart] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -46,54 +47,68 @@ const AllProduct = () => {
         setSearchQuery(e.target.elements.search.value);
     };
 
+    // Add to cart function
+    const addToCart = (product) => {
+        setCart([...cart, product]);
+    };
+
+    // Calculate total amount in the cart
+    const cartTotal = cart.reduce((total, item) => total + item.price, 0);
 
     return (
         <div className='mt-16'>
             <h3 className="text-center font-semibold text-3xl mb-7">FIND THE PERFECT PRODUCT FOR YOU</h3>
-            <div className="flex flex-col mr-4 my-4 space-y-4 ">
-                {/* Filter by product title */}
-                <div className="flex ">
-                    <form onSubmit={handleSearchChange} className="flex">
-                        <input
-                            type="text"
-                            className="text-base focus:border-blue-500 md:text-lg"
-                            placeholder="Search..."
-                            name='search'
-                        />
-                        <button
-                            type="submit"
-                            className='ml-2 bg-blue-500 py-2 px-4 rounded-md text-white font-semibold'>
-                            Search
-                        </button>
-                    </form>
+            <div className="flex flex-col md:flex-row justify-between items-center">
+                <div className="flex flex-col mr-4 my-4 space-y-4 ">
+                    {/* Filter by product title */}
+                    <div className="flex ">
+                        <form onSubmit={handleSearchChange} className="flex">
+                            <input
+                                type="text"
+                                className="text-base focus:border-blue-500 md:text-lg"
+                                placeholder=" Search..."
+                                name='search'
+                            />
+                            <button
+                                type="submit"
+                                className='ml-2 bg-blue-500 py-2 px-4 rounded-md text-white font-semibold'>
+                                Search
+                            </button>
+                        </form>
+                    </div>
+                    {/* Filter by price */}
+                    <div className="px-6 mb-5 fob">
+                        <label className="text-lg font-medium" htmlFor="priceFilter">Filter by Price: </label>
+                        <select
+                            className="text-base md:text-lg"
+                            id="priceFilter"
+                            onChange={(e) => setSelectedPrice(e.target.value)}
+                            value={selectedPrice}
+                        >
+                            <option value="">All</option>
+                            <option value="10-150">10-150</option>
+                            <option value="151-250">151-250</option>
+                            <option value="251-400">251-400</option>
+                            <option value="401-550">401-550</option>
+                            <option value="551-700">551-700</option>
+                            <option value="701-900">701-900</option>
+                            <option value="901-1000">901-1000</option>
+                            <option value="1000+">1000+</option>
+                        </select>
+                    </div>
                 </div>
-                {/* Filter by price */}
-                <div className="px-6 mb-5 fob">
-                    <label className="text-lg font-medium" htmlFor="priceFilter">Filter by Price: </label>
-                    <select
-                        className="text-base md:text-lg"
-                        id="priceFilter"
-                        onChange={(e) => setSelectedPrice(e.target.value)}
-                        value={selectedPrice}
-                    >
-                        <option value="">All</option>
-                        <option value="10-150">10-150</option>
-                        <option value="151-250">151-250</option>
-                        <option value="251-400">251-400</option>
-                        <option value="401-550">401-550</option>
-                        <option value="551-700">551-700</option>
-                        <option value="701-900">701-900</option>
-                        <option value="901-1000">901-1000</option>
-                        <option value="1000+">1000+</option>
-                    </select>
+                <div className='py-4 text-white font-semibold my-4 bg-slate-400 p-6  mx-auto md:mx-0'>
+                    <h1 className='text-2xl'>Your Cart</h1>
+                    <p className='text-center'>{cartTotal}</p>
                 </div>
             </div>
 
-            {
-                <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-3 gap-y-5'>
-                    {filteredProducts?.map(product => <Card key={product.id} product={product} />)}
-                </div>
-            }
+            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-3 gap-y-5'>
+                {filteredProducts?.map(product => (
+                    <Card key={product.id} product={product} addToCart={() => addToCart(product)} />
+                ))}
+            </div>
+
         </div>
     );
 };
