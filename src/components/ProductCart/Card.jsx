@@ -1,18 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Slider from '../Slider';
 import { BsCurrencyDollar } from 'react-icons/bs';
 
 const Card = ({ product }) => {
-    const { images, title, stock, rating, price, brand, description, discountPercentage } = product || '';
-    console.log(price)
-    console.log(typeof (price))
-    const handleClick = (star) => {
-        // Handle the click event if needed
-        console.log(`Clicked on star: ${star}`);
-    };
+    const [cartTotal, setCartTotal] = useState(0);
 
+    const { images, title, stock, rating, price, brand, description, discountPercentage } = product || '';
+
+    const HandelAddToCard = (price) => {
+        const priceValue = typeof price === 'string' ? parseFloat(price) : price;
+        setCartTotal((prevTotal) => prevTotal + priceValue);
+    };
+    console.log(cartTotal)
     return (
         <div className="rounded-md border border-slate-500 p-3 hover:border-red-600">
+
             <div className="flex flex-col space-y-3">
                 <Slider img={images} />
 
@@ -30,7 +32,7 @@ const Card = ({ product }) => {
                             {Array.from({ length: 5 }, (_, index) => (
                                 <span
                                     key={index}
-                                    onClick={() => handleClick(index + 1)}
+
                                     style={{
                                         cursor: 'pointer',
                                         color: index + 1 <= Math.floor(rating) || index + 0.5 <= rating ? 'gold' : 'gray',
@@ -47,7 +49,8 @@ const Card = ({ product }) => {
                             <BsCurrencyDollar />
                             {price}
                         </p>
-                        <button className="btn  btn-outline text-black  hover:text-white border-0 border-b-4 hover:border-green-500 border-green-500 hover:bg-green-500 font-semibold">
+                        <button onClick={() => HandelAddToCard(price)}
+                            className="btn  btn-outline text-black  hover:text-white border-0 border-b-4 hover:border-green-500 border-green-500 hover:bg-green-500 font-semibold">
                             Add To Cart
                         </button>
                     </div>
