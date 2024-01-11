@@ -3,6 +3,7 @@ import { createContext, useEffect, useState } from "react";
 import { GoogleAuthProvider, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from "firebase/auth";
 import { getAuth } from "firebase/auth";
 import app from "../Configuration/firebase.config"
+import useAxiosPublic from "../Hooks/axiosPublic";
 
 
 
@@ -13,7 +14,7 @@ const auth = getAuth(app);
 const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null)
     const [isLoading, setIsLoading] = useState(true)
-
+    const axiosPublic = useAxiosPublic()
     // Login with google
     const provider = new GoogleAuthProvider();
     const googleLogin = () => {
@@ -28,11 +29,31 @@ const AuthProvider = ({ children }) => {
     }
 
 
-    // login user with email & password
-    const LoginUser = (email, password) => {
-        setIsLoading(true)
-        return signInWithEmailAndPassword(auth, email, password)
+    const LoginUser = () => {
 
+        setIsLoading(true);
+
+        fetch('https://dummyjson.com/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                username: 'kminchelle',
+                password: '0lelplR',
+            })
+        })
+            .then(res => res.json())
+            .then(data => {
+                setUser(data);
+                console.log(data);
+            })
+            .catch(error => {
+                // Handle any error that occurs during the login process
+                console.error('Login failed:', error);
+            })
+            .finally(() => {
+                // Set loading state to false whether login is successful or not
+                setIsLoading(false);
+            });
     }
 
 
@@ -56,10 +77,20 @@ const AuthProvider = ({ children }) => {
     useEffect(() => {
         const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser)
+            setIsLoading(false)
             if (currentUser) {
-                setIsLoading(false)
+
                 if (currentUser) {
                     const userInfo = { email: currentUser.email }
+
+                    // axiosPublic.post('/auth/login', userInfo)
+                    //     .then(res => {
+                    //         if (res.data.token) {
+                    //             localStorage.setItem('access-token', res.data.token)
+                    //             console.log(res.data)
+                    // setIsLoading(false)
+                    //         }
+                    //     })
                 }
                 else {
                     // localStorage.removeItem('access-token')
@@ -76,7 +107,7 @@ const AuthProvider = ({ children }) => {
         return () => {
             unSubscribe()
         }
-    }, [])
+    }, [axiosPublic])
 
 
     // set value & send value object as a props
@@ -87,8 +118,9 @@ const AuthProvider = ({ children }) => {
         createUser,
         LoginUser,
         logoutUser,
-        updateProfileUser
-
+        updateProfileUser,
+        setIsLoading,
+        setUser
     }
 
     return (

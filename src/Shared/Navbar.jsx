@@ -6,9 +6,7 @@ import useAuth from "../Hooks/useAuth";
 
 const Navbar = () => {
     const [click, setClick] = useState(false);
-    const { user, logoutUser } = useAuth()
-    // navigate user after login out
-    const location = useLocation()
+    const { user, setUser } = useAuth()
     const navigate = useNavigate()
 
     const handleClick = () => {
@@ -17,12 +15,12 @@ const Navbar = () => {
 
     // logout user
     const HandelLogout = async () => {
-        const click = await logoutUser()
-        if (click) {
-            navigate('/login')
-        }
-
+        setUser(null)
+        localStorage.removeItem("token")
+        localStorage.removeItem("user");
+        navigate('/login')
     }
+
     const menuItems = (
         <div className="lg:hidden md:hidden block absolute top-6 w-24 ">
             <ul className="text-center text-xl flex flex-col bg-slate-900 ">
@@ -36,12 +34,11 @@ const Navbar = () => {
                     <li className="py-2 px-2 underline text-white ">Home</li>
                 </NavLink>
 
-                {
-                    user ? <li onClick={HandelLogout}
-                        className="py-2 px-2 underline text-white ">Sing Out</li> : <NavLink to='/login'>
-                        <li className="py-2 px-2 underline text-white ">Sing Up</li>
-                    </NavLink>
-                }
+
+                <li onClick={HandelLogout}
+                    className="py-2 px-2 underline text-white ">Sing Out</li>
+
+
 
             </ul>
         </div>
@@ -63,13 +60,10 @@ const Navbar = () => {
                                 <li className="text-slate-900 hover:text-emerald-600 transition hover:border-b-2 border-slate-900 hover:border-emerald-600 cursor-pointer">Home</li>
                             </NavLink>
 
-                            {
-                                user ? <li onClick={HandelLogout}
-                                    className="text-slate-900 hover:text-emerald-600 transition hover:border-b-2 border-slate-900 hover:border-emerald-600 cursor-pointer">Sing Out</li> :
-                                    <NavLink to='/login'>
-                                        <li className="text-slate-900 hover:text-emerald-600 transition hover:border-b-2 border-slate-900 hover:border-emerald-600 cursor-pointer">Sing Up</li>
-                                    </NavLink>
-                            }
+                            <li onClick={HandelLogout}
+                                className="text-slate-900 hover:text-emerald-600 transition hover:border-b-2 border-slate-900 hover:border-emerald-600 cursor-pointer">Sing Out</li>
+
+
 
 
                         </ul>
